@@ -1,21 +1,25 @@
 import 'dart:ui';
-
-import 'package:mobx/mobx.dart';
 import 'package:myapp/model/tema.dart';
+
+abstract class ITemaChangeListner {
+
+  void onChange(Tema tema);
+
+}
 
 class TemaController {
   Iterator<Tema> i;
   List<Tema> temas;
 
-  @observable
-  Tema escolhido;
+  Tema get escolhido => this.i.current;
 
-  @computed
   bool get isDark => escolhido.data.brightness == Brightness.dark;
 
+  List<ITemaChangeListner> temaChangeListners;
+
   TemaController(this.temas) {
+    this.temaChangeListners = <ITemaChangeListner>[];
     this.resetIterator();
-    this.atualizarEscolhido();
   }
 
   resetIterator() {
@@ -23,15 +27,20 @@ class TemaController {
     i.moveNext();
   }
 
-  atualizarEscolhido() {
-    escolhido = i.current;
-  }
-
-  @action
   mudarTema() {
     if (!i.moveNext()) {
       this.resetIterator();
     }
-    this.atualizarEscolhido();
+    this.raiseChangeListner(this.escolhido);
+  }
+
+  addChangeListner(ITemaChangeListner temaChangeListner) {
+    this.temaChangeListners.add(temaChangeListner);
+  }
+
+  raiseChangeListner(Tema tema) {
+    for (var listner in this.temaChangeListners) {
+      listner.onChange(tema);
+    }
   }
 }

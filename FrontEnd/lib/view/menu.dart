@@ -32,7 +32,7 @@ class _MenuPageState extends State<MenuPage> {
               padding: EdgeInsets.only(right: 20.0),
               child: GestureDetector(
                 onTap: widget.temaController.mudarTema,
-                child: Icon(Icons.more_vert),
+                child: Icon(Icons.highlight),
               ))
         ],
       ),

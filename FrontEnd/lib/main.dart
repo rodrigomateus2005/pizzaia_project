@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:myapp/controller/tema.controller.dart';
 import 'package:myapp/model/tema.dart';
 import 'package:myapp/view/menu.dart';
@@ -16,9 +15,13 @@ class MyApp extends StatefulWidget {
   _MyApp createState() => _MyApp();
 }
 
-class _MyApp extends State<MyApp> {
+class _MyApp extends State<MyApp> implements ITemaChangeListner {
   final TemaController temaController =
       new TemaController(<Tema>[Claro(), Escuro()]);
+
+  _MyApp() {
+    temaController.addChangeListner(this);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,15 +31,16 @@ class _MyApp extends State<MyApp> {
           create: (_) => temaController,
         )
       ],
-      child: Consumer<TemaController>(
-        builder: (_, TemaController value, __) => Observer(
-          builder: (_) => MaterialApp(
-            title: 'Instazzaia',
-            theme: value.escolhido.data,
-            home: MenuPage(value, title: 'Instazzaia'),
-          ),
-        ),
+      child: MaterialApp(
+        title: 'Instazzaia',
+        theme: temaController.escolhido.data,
+        home: MenuPage(temaController, title: 'Instazzaia'),
       ),
     );
+  }
+
+  @override
+  void onChange(Tema tema) {
+    this.setState(() => {});
   }
 }
