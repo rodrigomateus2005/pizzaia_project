@@ -16,17 +16,18 @@ class FotoViewService implements IFotoService {
   CameraDescription get firstCamera => this._cameras.first;
 
   set controller(CameraController value) {
-    this.controller = value;
+    this._controller = value;
   }
   FotoViewService(this._cameras);
 
   @override
-  Future<bool> capturarFotoCamera() {
+  Future<imglib.Image> capturarFotoCamera() {
     if (this._controller == null) {
-      return Future.value(false);
+      return Future.value(null);
     }
-    Completer c = new Completer();
+    Completer c = new Completer<imglib.Image>();
     this._controller.startImageStream((image) {
+      this._controller.stopImageStream();
       this._convertYUV420toImageColor(image).then((value) {
         c.complete(value);
       }).catchError(c.completeError);

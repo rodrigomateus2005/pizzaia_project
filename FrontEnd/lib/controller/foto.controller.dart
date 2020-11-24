@@ -12,7 +12,11 @@ class FotoController {
   }
   
   capturarFoto() {
-    this.fotoService.capturarFotoCamera().then((capturou) {
+    this.fotoService.capturarFotoCamera().then((imagem) {
+      if (this.fotoRepositories.length == 0) {
+        return;
+      }
+
       if (this.fotoRepositories.length > 1) {
         this.fotoService.perguntarOndeDesejaSalvar(this.fotoRepositories).then((respostaOndeSalvar) {
           this.salvarFoto(respostaOndeSalvar);
