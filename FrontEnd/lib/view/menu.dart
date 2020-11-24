@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/controller/foto.controller.dart';
 import 'package:myapp/controller/tema.controller.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class MenuPage extends StatefulWidget {
   final TemaController temaController;
+  final FotoController fotoController;
 
-  MenuPage(this.temaController, {Key key, this.title}) : super(key: key);
+  MenuPage(this.temaController, this.fotoController, {Key key, this.title})
+      : super(key: key);
 
   final String title;
 
@@ -14,12 +16,13 @@ class MenuPage extends StatefulWidget {
 }
 
 class _MenuPageState extends State<MenuPage> {
-  int _counter = 0;
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
+  void _takePicture() {
+    Navigator.pushNamed(context, '/foto');
+  }
+
+  void _openPhotos() {
+    widget.fotoController.capturarFoto();
   }
 
   @override
@@ -40,20 +43,18 @@ class _MenuPageState extends State<MenuPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
+            RaisedButton(
+              onPressed: _openPhotos,
+              child:
+                  const Text('Visualizar Fotos', style: TextStyle(fontSize: 20)),
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: widget.temaController.mudarTema,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
+        onPressed: _takePicture,
+        tooltip: 'Tirar Foto',
+        child: Icon(Icons.camera_alt),
       ),
     );
   }
