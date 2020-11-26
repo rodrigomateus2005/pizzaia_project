@@ -1,0 +1,1 @@
+java -jar swagger-codegen-cli.jar generate -i http://localhost:5080/swagger/v1/swagger.json -l dart -o lib\repository\api\swagger

@@ -1,0 +1,14 @@
+D:\projetoPizzaia\BackEnd\bin\Debug\netcoreapp2.2\BackEnd.deps.json
+D:\projetoPizzaia\BackEnd\bin\Debug\netcoreapp2.2\BackEnd.runtimeconfig.json
+D:\projetoPizzaia\BackEnd\bin\Debug\netcoreapp2.2\BackEnd.runtimeconfig.dev.json
+D:\projetoPizzaia\BackEnd\bin\Debug\netcoreapp2.2\BackEnd.dll
+D:\projetoPizzaia\BackEnd\bin\Debug\netcoreapp2.2\BackEnd.pdb
+D:\projetoPizzaia\BackEnd\obj\Debug\netcoreapp2.2\BackEnd.csprojAssemblyReference.cache
+D:\projetoPizzaia\BackEnd\obj\Debug\netcoreapp2.2\BackEnd.csproj.CoreCompileInputs.cache
+D:\projetoPizzaia\BackEnd\obj\Debug\netcoreapp2.2\BackEnd.RazorAssemblyInfo.cache
+D:\projetoPizzaia\BackEnd\obj\Debug\netcoreapp2.2\BackEnd.RazorAssemblyInfo.cs
+D:\projetoPizzaia\BackEnd\obj\Debug\netcoreapp2.2\BackEnd.AssemblyInfoInputs.cache
+D:\projetoPizzaia\BackEnd\obj\Debug\netcoreapp2.2\BackEnd.AssemblyInfo.cs
+D:\projetoPizzaia\BackEnd\obj\Debug\netcoreapp2.2\BackEnd.RazorTargetAssemblyInfo.cache
+D:\projetoPizzaia\BackEnd\obj\Debug\netcoreapp2.2\BackEnd.dll
+D:\projetoPizzaia\BackEnd\obj\Debug\netcoreapp2.2\BackEnd.pdb
