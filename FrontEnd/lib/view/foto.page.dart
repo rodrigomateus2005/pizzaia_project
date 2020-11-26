@@ -18,7 +18,7 @@ class FotoPage extends StatefulWidget {
   _FotoPage createState() => _FotoPage();
 }
 
-class _FotoPage extends State<FotoPage> {
+class _FotoPage extends State<FotoPage> implements IFotoRadioRepositoryChangeListner {
   CameraController _controller;
   Future<void> _initializeControllerFuture;
 
@@ -32,11 +32,14 @@ class _FotoPage extends State<FotoPage> {
     _initializeControllerFuture = _controller.initialize();
 
     this.widget.fotoViewService.controller = _controller;
+    this.widget.fotoViewService.addChangeListner(this);
   }
 
   @override
   void dispose() {
     this.widget.fotoViewService.controller = null;
+    this.widget.fotoViewService.context = null;
+    this.widget.fotoViewService.removeChangeListner(this);
     _controller.dispose();
     super.dispose();
   }
@@ -55,6 +58,7 @@ class _FotoPage extends State<FotoPage> {
 
   @override
   Widget build(BuildContext context) {
+    this.widget.fotoViewService.context = context;
     return Scaffold(
       appBar: AppBar(title: Text('Tire uma Foto')),
       body: FutureBuilder<void>(
@@ -72,5 +76,12 @@ class _FotoPage extends State<FotoPage> {
         onPressed: this.onClickTakePicture,
       ),
     );
+  }
+
+  @override
+  onRepositoryChange() {
+    this.setState(() {
+      
+    });
   }
 }

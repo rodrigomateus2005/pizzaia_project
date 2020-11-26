@@ -6,16 +6,27 @@ import 'package:myapp/service/ifoto.service.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
+abstract class IFotoRadioRepositoryChangeListner {
+  onRepositoryChange();
+}
+
 class FotoViewService implements IFotoService {
   List<CameraDescription> _cameras;
   IFotoRepository _repository;
 
   CameraController _controller;
+  BuildContext _context;
+
+  List<IFotoRadioRepositoryChangeListner> _listners = [];
 
   CameraDescription get firstCamera => this._cameras.first;
 
   set controller(CameraController value) {
     this._controller = value;
+  }
+
+  set context(BuildContext value) {
+    this._context = value;
   }
 
   FotoViewService(this._cameras);
@@ -38,9 +49,9 @@ class FotoViewService implements IFotoService {
   @override
   Future<IFotoRepository> perguntarOndeDesejaSalvar(
       List<IFotoRepository> repositories) {
-    Completer c = new Completer();
+    Completer<IFotoRepository> c = new Completer<IFotoRepository>();
     showDialog(
-        context: null,
+        context: this._context,
         builder: (BuildContext context) {
           return AlertDialog(
             title: new Text('Escolha aonde deseja salvar a foto'),
@@ -78,10 +89,25 @@ class FotoViewService implements IFotoService {
         groupValue: this._repository,
         onChanged: (IFotoRepository value) {
           this._repository = value;
+          this._raiseChangeListner();
         },
       ));
     }
 
     return retorno;
+  }
+
+  addChangeListner(IFotoRadioRepositoryChangeListner fotoRadioRepositoryChangeListner) {
+    this._listners.add(fotoRadioRepositoryChangeListner);
+  }
+
+  removeChangeListner(IFotoRadioRepositoryChangeListner fotoRadioRepositoryChangeListner) {
+    this._listners.remove(fotoRadioRepositoryChangeListner);
+  }
+
+  _raiseChangeListner() {
+    for (var listner in this._listners) {
+      listner.onRepositoryChange();
+    }
   }
 }

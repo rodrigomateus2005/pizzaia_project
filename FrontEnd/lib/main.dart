@@ -6,6 +6,7 @@ import 'package:myapp/controller/tema.controller.dart';
 import 'package:myapp/migrations/initial.migrate.dart';
 import 'package:myapp/migrations/migrate.dart';
 import 'package:myapp/model/tema.dart';
+import 'package:myapp/repository/api/foto.repository.api.dart';
 import 'package:myapp/repository/galeria/foto.repository.galeria.dart';
 import 'package:myapp/repository/ifoto.repository.dart';
 import 'package:myapp/repository/itema.repository.dart';
@@ -18,6 +19,8 @@ import 'package:myapp/view/menu.page.dart';
 import 'package:myapp/view/service/foto.view.service.dart';
 import 'package:myapp/view/themes/claro.tema.dart';
 import 'package:myapp/view/themes/escuro.tema.dart';
+import 'package:openapi/api.dart';
+import 'package:openapi/api/foto_api.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -61,6 +64,10 @@ class _MyApp extends State<MyApp> implements ITemaChangeListner {
   FotoRepositorySQLite fotoRepositorySQLite;
   FotoRepositoryGaleria fotoRepositoryGaleria;
 
+  Openapi openapi;
+  FotoApi fotoApi;
+  FotoRepositoryApi fotoRepositoryApi;
+
   _MyApp(this._cameras, this._database) {
     List<Tema> temas = <Tema>[Claro(), Escuro()];
 
@@ -73,8 +80,12 @@ class _MyApp extends State<MyApp> implements ITemaChangeListner {
     this.fotoRepositorySQLite =
         new FotoRepositorySQLite(this._database, this.fotoRepositoryGaleria);
 
+    this.openapi = new Openapi(basePathOverride: "http://10.0.2.2:5080/"); // IP loopback para o host no android emulator
+    this.fotoApi = this.openapi.getFotoApi();
+    this.fotoRepositoryApi = new FotoRepositoryApi(this.fotoApi);
+
     this.fotoService = new FotoViewService(this._cameras);
-    this.fotoRepositories = [this.fotoRepositorySQLite];
+    this.fotoRepositories = [this.fotoRepositorySQLite, this.fotoRepositoryApi];
 
     this.fotoController = new FotoController(fotoService, fotoRepositories);
   }

@@ -11,12 +11,12 @@ class FotoController {
 
   FotoController(this._fotoService, this._fotoRepositories);
 
-  capturarFoto() {
+  Future<bool> capturarFoto() {
     if (this._fotoRepositories.length == 0) {
-      return;
+      return Future.value(false);
     }
 
-    this._fotoService.capturarFotoCamera().then((url) {
+    return this._fotoService.capturarFotoCamera().then((url) {
       var uuid = Uuid();
       var foto = new Foto(uuid: uuid.v1().toString(), url: url);
 
@@ -30,11 +30,13 @@ class FotoController {
       } else {
         this._salvarFoto(foto, this._fotoRepositories[0]);
       }
+
+      return true;
     });
   }
 
-  _salvarFoto(Foto foto, IFotoRepository repositoryEscolhido) {
-    repositoryEscolhido.salvar(foto);
+  Future<bool> _salvarFoto(Foto foto, IFotoRepository repositoryEscolhido) {
+    return repositoryEscolhido.salvar(foto);
   }
 
   Future<bool> salvarFoto(Foto foto) {
