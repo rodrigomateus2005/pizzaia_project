@@ -16,13 +16,12 @@ class MenuPage extends StatefulWidget {
 }
 
 class _MenuPageState extends State<MenuPage> {
-
   void _takePicture() {
     Navigator.pushNamed(context, '/foto');
   }
 
   void _openPhotos() {
-    widget.fotoController.capturarFoto();
+    Navigator.pushNamed(context, '/lista');
   }
 
   @override
@@ -45,8 +44,8 @@ class _MenuPageState extends State<MenuPage> {
           children: <Widget>[
             RaisedButton(
               onPressed: _openPhotos,
-              child:
-                  const Text('Visualizar Fotos', style: TextStyle(fontSize: 20)),
+              child: const Text('Visualizar Fotos',
+                  style: TextStyle(fontSize: 20)),
             ),
           ],
         ),

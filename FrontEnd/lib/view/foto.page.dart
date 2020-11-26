@@ -46,6 +46,8 @@ class _FotoPage extends State<FotoPage> {
       await _initializeControllerFuture;
 
       this.widget.fotoController.capturarFoto();
+
+      Navigator.of(context).pop(true);
     } catch (e) {
       print(e);
     }

@@ -3,12 +3,17 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/controller/foto.controller.dart';
 import 'package:myapp/controller/tema.controller.dart';
+import 'package:myapp/migrations/initial.migrate.dart';
+import 'package:myapp/migrations/migrate.dart';
 import 'package:myapp/model/tema.dart';
+import 'package:myapp/repository/galeria/foto.repository.galeria.dart';
 import 'package:myapp/repository/ifoto.repository.dart';
 import 'package:myapp/repository/itema.repository.dart';
 import 'package:myapp/repository/shared_preferences/tema.repository.sharedpreferences.dart';
+import 'package:myapp/repository/sqlite/foto.repository.sqlite.dart';
 import 'package:myapp/service/ifoto.service.dart';
 import 'package:myapp/view/foto.page.dart';
+import 'package:myapp/view/lista.page.dart';
 import 'package:myapp/view/menu.page.dart';
 import 'package:myapp/view/service/foto.view.service.dart';
 import 'package:myapp/view/themes/claro.tema.dart';
@@ -21,11 +26,17 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final cameras = await availableCameras();
 
-  final Future<Database> database = openDatabase(
-    join(await getDatabasesPath(), 'projeto.db'),
-  );
+  List<IMigrate> migrations = [InitialMigrate()];
 
-  runApp(MyApp(cameras));
+  final database = await openDatabase(
+      join(await getDatabasesPath(), 'projeto.db'),
+      version: 1, onCreate: (Database db, int version) async {
+    for (var migrate in migrations) {
+      await db.execute(migrate.getScript());
+    }
+  });
+
+  runApp(MyApp(cameras, database));
 }
 
 class MyApp extends StatefulWidget {
@@ -35,7 +46,7 @@ class MyApp extends StatefulWidget {
   MyApp(this._cameras, this._database, {Key key}) : super(key: key);
 
   @override
-  _MyApp createState() => _MyApp(_cameras);
+  _MyApp createState() => _MyApp(_cameras, _database);
 }
 
 class _MyApp extends State<MyApp> implements ITemaChangeListner {
@@ -45,8 +56,12 @@ class _MyApp extends State<MyApp> implements ITemaChangeListner {
   List<IFotoRepository> fotoRepositories;
   FotoController fotoController;
   List<CameraDescription> _cameras;
+  Database _database;
 
-  _MyApp(this._cameras) {
+  FotoRepositorySQLite fotoRepositorySQLite;
+  FotoRepositoryGaleria fotoRepositoryGaleria;
+
+  _MyApp(this._cameras, this._database) {
     List<Tema> temas = <Tema>[Claro(), Escuro()];
 
     this.temaRepository = new TemaRepositorySharedPreferences(temas);
@@ -54,8 +69,12 @@ class _MyApp extends State<MyApp> implements ITemaChangeListner {
 
     temaController.addChangeListner(this);
 
+    this.fotoRepositoryGaleria = new FotoRepositoryGaleria();
+    this.fotoRepositorySQLite =
+        new FotoRepositorySQLite(this._database, this.fotoRepositoryGaleria);
+
     this.fotoService = new FotoViewService(this._cameras);
-    this.fotoRepositories = [];
+    this.fotoRepositories = [this.fotoRepositorySQLite];
 
     this.fotoController = new FotoController(fotoService, fotoRepositories);
   }
@@ -89,6 +108,9 @@ class _MyApp extends State<MyApp> implements ITemaChangeListner {
               MenuPage(temaController, fotoController, title: 'Instazzaia'),
           '/foto': (context) => FotoPage(
                 fotoViewService: fotoService,
+                fotoController: fotoController,
+              ),
+          '/lista': (context) => ListaPage(
                 fotoController: fotoController,
               ),
         },
