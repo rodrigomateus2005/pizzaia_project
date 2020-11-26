@@ -7,7 +7,7 @@ class InitialMigrate implements IMigrate {
     String script;
     script = "CREATE TABLE Foto (";
     script += " UUID TEXT PRIMARY KEY,";
-    script += " Comentario TEXT";
+    script += " Favorita INTEGER";
     script += ")";
 
     return script;

@@ -20,7 +20,9 @@ class FotoRepositorySQLite implements IFotoRepository {
     String script;
     script = "INSERT INTO Foto VALUES (?, ?)";
 
-    this._database.execute(script, [foto.uuid, foto.comentario]).then((value) {
+    this
+        ._database
+        .execute(script, [foto.uuid, foto.favorita ? 1 : 0]).then((value) {
       this._repo.salvar(foto).then((value) => c.complete(true));
     }).catchError(c.completeError);
 
@@ -32,14 +34,14 @@ class FotoRepositorySQLite implements IFotoRepository {
     Completer<List<Foto>> c = new Completer<List<Foto>>();
 
     String script;
-    script = "SELECT UUID, Comentario FROM Foto";
+    script = "SELECT UUID, Favorita FROM Foto";
 
     this._database.rawQuery(script).then((value) {
       List<Foto> retorno = [];
       for (var item in value) {
         retorno.add(Foto(
             uuid: item['UUID'],
-            comentario: item['Comentario'],
+            favorita: item['Favorita'] == 1 ? true : false,
             url: this._repo.nomeFoto(item['UUID']),
             repoName: this.nomeRepository));
       }
@@ -55,10 +57,16 @@ class FotoRepositorySQLite implements IFotoRepository {
 
     String script;
     script = "UPDATE Foto";
-    script += "SET Comentario = ?";
-    script += "WHERE UUID = ?";
+    script += " SET Favorita = ?";
+    script += " WHERE UUID = ?";
 
-    this._database.execute(script, [foto.comentario, foto.uuid]).then((value) => c.complete()).catchError(c.completeError);
+    this
+        ._database
+        .execute(script, [foto.favorita ? 1 : 0, foto.uuid])
+        .then((value) {
+          c.complete(true);
+        })
+        .catchError(c.completeError);
 
     return c.future;
   }

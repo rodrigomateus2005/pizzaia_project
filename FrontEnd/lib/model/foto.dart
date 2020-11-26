@@ -1,8 +1,10 @@
 class Foto {
   String uuid;
-  String comentario;
+  bool favorita;
   String url;
   String repoName;
 
-  Foto({this.uuid, this.comentario, this.url, this.repoName});
+  Foto({this.uuid, this.favorita, this.url, this.repoName}) {
+    if (this.favorita == null) this.favorita = false;
+  }
 }
