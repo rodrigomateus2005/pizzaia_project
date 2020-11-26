@@ -39,4 +39,18 @@ class FotoRepositoryGaleria implements IFotoRepository {
   String nomeFoto(String uuid) {
     return join(this._path, uuid + '.png');
   }
+
+  @override
+  Future<bool> alterar(Foto foto) {
+    return null;
+  }
+
+  @override
+  Future<bool> excluir(Foto foto) {
+    Completer<bool> c = new Completer();
+
+    File(foto.url).delete().then((value) => c.complete(true));
+
+    return c.future;
+  }
 }

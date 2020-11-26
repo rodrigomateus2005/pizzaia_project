@@ -37,6 +37,36 @@ class FotoController {
     repositoryEscolhido.salvar(foto);
   }
 
+  Future<bool> salvarFoto(Foto foto) {
+    var repo = this._fotoRepositories.firstWhere((element) => element.nomeRepository == foto.repoName);
+
+    if (repo == null) {
+      return Future.value(false);
+    }
+
+    return this._salvarFoto(foto, repo);
+  }
+
+  Future<bool> alterarFoto(Foto foto) {
+    var repo = this._fotoRepositories.firstWhere((element) => element.nomeRepository == foto.repoName);
+
+    if (repo == null) {
+      return Future.value(false);
+    }
+
+    return repo.alterar(foto);
+  }
+
+  Future<bool> excluirFoto(Foto foto) {
+    var repo = this._fotoRepositories.firstWhere((element) => element.nomeRepository == foto.repoName);
+
+    if (repo == null) {
+      return Future.value(false);
+    }
+
+    return repo.excluir(foto);
+  }
+
   Future<List<Foto>> retornarFotos() {
     Completer<List<Foto>> c = new Completer<List<Foto>>();
     List<Foto> retorno = [];
