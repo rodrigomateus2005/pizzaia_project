@@ -12,16 +12,19 @@ namespace BackEnd.Repository.SQLite {
         public void salvar(Foto foto)
         {
             this._context.Fotos.Add(foto);
+            this._context.SaveChanges();
         }
 
         public void atualizar(Foto foto)
         {
             this._context.Fotos.Update(foto);
+            this._context.SaveChanges();
         }
 
         public void deletar(Foto foto)
         {
             this._context.Fotos.Remove(foto);
+            this._context.SaveChanges();
         }
 
         public Foto[] recuperar()

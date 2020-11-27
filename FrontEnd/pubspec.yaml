@@ -41,6 +41,10 @@ dependencies:
   openapi:
     path: ../openapi
 
+  google_maps_flutter: ^0.5.11+1
+  location: ^2.3.5
+  flutter_polyline_points: ^0.1.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

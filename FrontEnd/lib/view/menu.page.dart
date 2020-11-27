@@ -24,6 +24,10 @@ class _MenuPageState extends State<MenuPage> {
     Navigator.pushNamed(context, '/lista');
   }
 
+  void _localizar() {
+    Navigator.pushNamed(context, '/localizar');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,6 +49,11 @@ class _MenuPageState extends State<MenuPage> {
             RaisedButton(
               onPressed: _openPhotos,
               child: const Text('Visualizar Fotos',
+                  style: TextStyle(fontSize: 20)),
+            ),
+            RaisedButton(
+              onPressed: _localizar,
+              child: const Text('Localizar',
                   style: TextStyle(fontSize: 20)),
             ),
           ],

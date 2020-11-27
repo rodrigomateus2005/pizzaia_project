@@ -17,7 +17,7 @@ namespace BackEnd.Controllers
 
         private readonly IFotoRepository _repositorio;
         private readonly IHostingEnvironment _hostingEnvironment;
-        
+
         public FotoController(IHostingEnvironment hostingEnvironment, IFotoRepository repositorio)
         {
             _repositorio = repositorio;
@@ -36,12 +36,12 @@ namespace BackEnd.Controllers
             return this._repositorio.recuperar();
         }
 
-        [HttpGet("{uuid}")]
+        [HttpGet("{uuid}.png")]
         public ActionResult<string> Get(string uuid)
         {
             if (!System.IO.File.Exists(this.pathFoto(uuid))) return NotFound();
 
-            return Content($"~/Fotos/{uuid}.png");
+            return File(System.IO.File.Open(this.pathFoto(uuid), System.IO.FileMode.Open), "image/png");
         }
 
         [HttpPost]
@@ -51,7 +51,16 @@ namespace BackEnd.Controllers
             foto.uuid = uuid;
             foto.favorita = favorita;
             this._repositorio.salvar(foto);
-            arquivo.CopyTo(System.IO.File.Open(this.pathFoto(uuid), System.IO.FileMode.OpenOrCreate));
+            if (!System.IO.Directory.Exists(this.directoryFoto()))
+            {
+                System.IO.Directory.CreateDirectory(this.directoryFoto());
+            }
+            using (System.IO.Stream s = System.IO.File.Open(this.pathFoto(uuid), System.IO.FileMode.OpenOrCreate))
+            {
+                arquivo.CopyTo(s);
+                s.Close();
+            }
+
         }
 
         [HttpPut("{uuid}")]
@@ -75,8 +84,20 @@ namespace BackEnd.Controllers
             }
         }
 
-        private string pathFoto(string uuid) {
-            return System.IO.Path.Combine(this._hostingEnvironment.WebRootPath, "Fotos", $"{uuid}.png");
+        private string directoryFoto()
+        {
+            string pathBase;
+#if DEBUG
+            pathBase = this._hostingEnvironment.ContentRootPath;
+#else
+            pathBase = this._hostingEnvironment.WebRootPath;
+#endif
+            return System.IO.Path.Combine(pathBase, "Fotos");
+        }
+
+        private string pathFoto(string uuid)
+        {
+            return System.IO.Path.Combine(this.directoryFoto(), $"{uuid}.png");
         }
     }
 }
