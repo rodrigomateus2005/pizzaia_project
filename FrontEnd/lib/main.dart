@@ -15,6 +15,7 @@ import 'package:myapp/repository/sqlite/foto.repository.sqlite.dart';
 import 'package:myapp/service/ifoto.service.dart';
 import 'package:myapp/view/foto.page.dart';
 import 'package:myapp/view/lista.page.dart';
+import 'package:myapp/view/localizar.page.dart';
 import 'package:myapp/view/menu.page.dart';
 import 'package:myapp/view/service/foto.view.service.dart';
 import 'package:myapp/view/themes/claro.tema.dart';
@@ -80,7 +81,9 @@ class _MyApp extends State<MyApp> implements ITemaChangeListner {
     this.fotoRepositorySQLite =
         new FotoRepositorySQLite(this._database, this.fotoRepositoryGaleria);
 
-    this.openapi = new Openapi(basePathOverride: "http://10.0.2.2:5080/"); // IP loopback para o host no android emulator
+    this.openapi = new Openapi(
+        basePathOverride:
+            "https://app-pizzaia.herokuapp.com/"); // IP loopback para o host no android emulator
     this.fotoApi = this.openapi.getFotoApi();
     this.fotoRepositoryApi = new FotoRepositoryApi(this.fotoApi);
 
@@ -124,6 +127,7 @@ class _MyApp extends State<MyApp> implements ITemaChangeListner {
           '/lista': (context) => ListaPage(
                 fotoController: fotoController,
               ),
+          '/localizar': (context) => LocalizarPage(),
         },
       ),
     );

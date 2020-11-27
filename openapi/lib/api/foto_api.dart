@@ -130,11 +130,11 @@ class FotoApi {
                     formData[r'uuid'] = parameterToString(_serializers, uuid);
                 }
                 if (favorita != null) {
-                    formData[r'favorita'] = parameterToString(_serializers, favorita);
+                    formData[r'favorita'] = favorita ? "true" : "false"; // parameterToString(_serializers, favorita);
                 }
 
                 if (arquivo != null) {
-                    formData[r'arquivo'] = MultipartFile.fromFile(arquivo);
+                    formData[r'arquivo'] = MultipartFile.fromFileSync(arquivo, filename: "arquivo");
                 }
                 
         bodyData = FormData.fromMap(formData);
@@ -251,7 +251,7 @@ class FotoApi {
         List<String> contentTypes = ["application/json-patch+json","application/json","text/json","application/_*+json"];
 
 
-            var serializedBody = _serializers.serialize(body);
+            var serializedBody = body ? "true" : "false";
             var jsonbody = json.encode(serializedBody);
             bodyData = jsonbody;
 

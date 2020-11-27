@@ -1,4 +1,3 @@
-// A screen that allows users to take a picture using a given camera.
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -25,8 +24,7 @@ class _ListaPage extends State<ListaPage> {
     foto.favorita = !foto.favorita;
     this.widget.fotoController.alterarFoto(foto).then((value) {
       if (value) {
-        setState(() {
-        });
+        setState(() {});
       }
     });
   }
@@ -49,6 +47,31 @@ class _ListaPage extends State<ListaPage> {
     _futureListaDeImagens.then((value) => this.listaFotos = value);
   }
 
+  ImageProvider criarImage(Foto foto) {
+    if (foto.repoName == "Nuvem") {
+      return NetworkImage(foto.url);
+    } else {
+      return FileImage(File(foto.url));
+    }
+    
+  }
+
+  Widget criarIconeLocal(Foto foto) {
+    if (foto.repoName == "Nuvem") {
+      return new Stack(
+                            children: <Widget>[
+                              new Positioned(
+                                right: 0.0,
+                                bottom: 0.0,
+                                child: Icon(Icons.cloud, color: Colors.blue)
+                              ),
+                            ],
+                          );
+    } else {
+      return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,7 +87,20 @@ class _ListaPage extends State<ListaPage> {
                     mainAxisSize: MainAxisSize.max,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      new Image.file(File(this.listaFotos[index].url)),
+                      Container(
+                          constraints: new BoxConstraints.expand(
+                            height: 200.0,
+                          ),
+                          padding: new EdgeInsets.only(
+                              left: 16.0, bottom: 8.0, right: 16.0),
+                          decoration: new BoxDecoration(
+                            image: new DecorationImage(
+                              image: this.criarImage(this.listaFotos[index]),
+                              fit: BoxFit.scaleDown,
+                            ),
+                          ),
+                          child: this.criarIconeLocal(this.listaFotos[index]) // aki
+                          ),
                       new Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           mainAxisSize: MainAxisSize.max,

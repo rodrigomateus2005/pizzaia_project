@@ -36,7 +36,7 @@ class FotoRepositoryApi implements IFotoRepository {
         retorno.add(new Foto(
           uuid: item.uuid,
           favorita: item.favorita,
-          url: "http://127.0.0.1:5080/api/Foto/$item.uuid",
+          url: "https://app-pizzaia.herokuapp.com/api/Foto/${item.uuid}.png",
           repoName: this.nomeRepository
         ));
       }
